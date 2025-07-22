@@ -43,3 +43,29 @@ jobs:
             name: test-file
             path: test-file.txt 
 
+    code-coverage:
+     name: Code Coverage
+     strategy:
+        matrix:
+         nodejs_version: [18, 19, 20]
+         operating_system: [ubuntu-latest, windows-latest]
+         exclude:
+          - nodejs_version: 18
+            operating_system: windows-latest
+     runs-on: ${{ matrix.operating_system}}       
+     steps:  
+        - name: Checkout Repo
+          uses: actions/checkout@v4
+
+
+        - name: Intstall Dependencies
+          run: npm install
+  
+        - name: Unit Test
+          run: npm run coverage
+
+        - name: Upload Artifact
+          uses: actions/upload-artifact@v3
+          with :
+            name: coverage-file
+            path: coverage-file.txt 
