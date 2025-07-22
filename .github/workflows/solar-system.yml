@@ -14,25 +14,32 @@ env:
 jobs:
     unit-testing:
      name: Unit Test
-     runs-on: ubuntu-latest
+     strategy:
+        matrix:
+         nodejs_version: [18, 19, 20]
+         operating_system: [ubuntu-latest, windows-latest]
+         exclude:
+          - nodejs_version: 18
+            operating_system: windows-latest
+     runs-on: ${{ matrix.operating_system}}       
      steps:  
-      - name: Checkout Repo
-        uses: actions/checkout@v4
+        - name: Checkout Repo
+          uses: actions/checkout@v4
 
-      - name: setup node js version - 18
-        uses: actions/setup-node@v3
-        with:
-         node-version: '18'
+        - name: setup node js version - 18
+          uses: actions/setup-node@v3
+          with:
+           node-version: '18'
 
-      - name: Intstall Dependencies
-        run: npm install
+        - name: Intstall Dependencies
+          run: npm install
   
-      - name: Unit Test
-        run: npm test
+        - name: Unit Test
+          run: npm test
 
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v3
-        with :
+        - name: Upload Artifact
+          uses: actions/upload-artifact@v3
+          with :
             name: test-file
             path: test-file.txt 
 
